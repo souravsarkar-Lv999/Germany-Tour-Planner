@@ -20,3 +20,13 @@ If Windows asks whether Python can use the network, allow it on private networks
 
 The AI chat uses this OpenRouter model:
 `nvidia/nemotron-3-super-120b-a12b:free`
+
+## Change pictures
+
+Edit `images.js`.
+
+You can paste online image URLs, or put your own image files in `assets` and use paths like:
+
+`assets/my-berlin-photo.jpg`
+
+The app automatically crops and resizes images to fit the layout.

@@ -971,17 +971,19 @@
     </section>
   </main>
 
+  <script src="images.js"></script>
   <script>
     const commons = (fileName) => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(fileName)}`;
     const touristPhoto = (tags, lock, width = 1500, height = 1000) => `https://loremflickr.com/${width}/${height}/${encodeURIComponent(tags)}?lock=${lock}`;
     const seededPhoto = (seed, width = 1500, height = 1000) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/${width}/${height}`;
+    const imageSet = (city) => window.TOUR_IMAGES?.[city] || {};
 
     const cities = [
       {
         name: "Berlin",
         days: "3 days",
         accent: "#bf6472",
-        image: seededPhoto("berlin-tourist-place-brandenburg-gate-new", 1500, 1000),
+        image: imageSet("Berlin").main || seededPhoto("berlin-tourist-place-brandenburg-gate-new", 1500, 1000),
         gallery: [
           seededPhoto("berlin-brandenburg-gate-gallery", 900, 650),
           seededPhoto("berlin-reichstag-gallery", 900, 650),
@@ -1011,7 +1013,7 @@
         name: "Hamburg",
         days: "2 days",
         accent: "#276577",
-        image: touristPhoto("hamburg,speicherstadt,landmark", 201),
+        image: imageSet("Hamburg").main || touristPhoto("hamburg,speicherstadt,landmark", 201),
         gallery: [
           touristPhoto("hamburg,speicherstadt", 202, 900, 650),
           touristPhoto("hamburg,elbphilharmonie", 203, 900, 650),
@@ -1041,7 +1043,7 @@
         name: "Bremen",
         days: "1 day",
         accent: "#a84d35",
-        image: seededPhoto("bremen-schnoor-old-town-unique", 1500, 1000),
+        image: imageSet("Bremen").main || seededPhoto("bremen-schnoor-old-town-unique", 1500, 1000),
         gallery: [
           seededPhoto("bremen-market-square-gallery", 900, 650),
           seededPhoto("bremen-schnoor-gallery", 900, 650),
@@ -1071,7 +1073,7 @@
         name: "Frankfurt",
         days: "1 to 2 days",
         accent: "#d79b3e",
-        image: touristPhoto("frankfurt,skyline,landmark", 401),
+        image: imageSet("Frankfurt").main || touristPhoto("frankfurt,skyline,landmark", 401),
         gallery: [
           touristPhoto("frankfurt,skyline", 402, 900, 650),
           touristPhoto("frankfurt,romerberg", 403, 900, 650),
@@ -1101,7 +1103,7 @@
         name: "Cologne",
         days: "1 day",
         accent: "#24483a",
-        image: touristPhoto("cologne,cathedral,landmark", 501),
+        image: imageSet("Cologne").main || touristPhoto("cologne,cathedral,landmark", 501),
         gallery: [
           touristPhoto("cologne,cathedral", 502, 900, 650),
           touristPhoto("cologne,rhine", 503, 900, 650),
@@ -1131,7 +1133,7 @@
         name: "Munich",
         days: "3 days",
         accent: "#276577",
-        image: seededPhoto("munich-marienplatz-bavaria-unique", 1500, 1000),
+        image: imageSet("Munich").main || seededPhoto("munich-marienplatz-bavaria-unique", 1500, 1000),
         gallery: [
           seededPhoto("munich-marienplatz-gallery", 900, 650),
           seededPhoto("munich-nymphenburg-palace-gallery", 900, 650),
@@ -1161,7 +1163,7 @@
         name: "Dresden",
         days: "2 days",
         accent: "#a84d35",
-        image: touristPhoto("dresden,frauenkirche,landmark", 701),
+        image: imageSet("Dresden").main || touristPhoto("dresden,frauenkirche,landmark", 701),
         gallery: [
           touristPhoto("dresden,frauenkirche", 702, 900, 650),
           touristPhoto("dresden,zwinger", 703, 900, 650),
@@ -1202,6 +1204,16 @@
     const gallery = document.querySelector("#gallery");
     const chips = document.querySelector("#chips");
 
+
+    cities.forEach((city) => {
+      const configuredImages = imageSet(city.name);
+      if (configuredImages.main) {
+        city.image = configuredImages.main;
+      }
+      if (Array.isArray(configuredImages.gallery) && configuredImages.gallery.length) {
+        city.gallery = configuredImages.gallery;
+      }
+    });
     const routeOrder = ["Berlin", "Hamburg", "Bremen", "Frankfurt", "Cologne", "Munich", "Dresden"];
 
     function fallbackSvg(label) {

@@ -1,0 +1,8 @@
+Put your own images in this folder.
+
+Then edit images.js and use paths like:
+
+assets/my-berlin-photo.jpg
+assets/munich-main.png
+
+The app will automatically crop and resize them to fit.
