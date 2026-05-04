@@ -937,7 +937,7 @@
           <br><br>
           <strong>Creator GitHub:</strong>
           <br>
-          <a class="github-link" href="https://github.com/souravsarkar-Lv999" target="_blank" rel="noreferrer"><span>Open Sourav's GitHub</span></a>
+          <a class="github-link" href="https://github.com/souravsarkar-Lv999" target="_blank" rel="noreferrer"><span>https://github.com/souravsarkar-Lv999</span></a>
         </div>
       </div>
     </section>
@@ -974,18 +974,19 @@
   <script>
     const commons = (fileName) => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(fileName)}`;
     const touristPhoto = (tags, lock, width = 1500, height = 1000) => `https://loremflickr.com/${width}/${height}/${encodeURIComponent(tags)}?lock=${lock}`;
+    const seededPhoto = (seed, width = 1500, height = 1000) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/${width}/${height}`;
 
     const cities = [
       {
         name: "Berlin",
         days: "3 days",
         accent: "#bf6472",
-        image: touristPhoto("berlin,brandenburg-gate,landmark", 101),
+        image: seededPhoto("berlin-tourist-place-brandenburg-gate-new", 1500, 1000),
         gallery: [
-          touristPhoto("berlin,brandenburg-gate", 102, 900, 650),
-          touristPhoto("berlin,reichstag", 103, 900, 650),
-          touristPhoto("berlin,east-side-gallery", 104, 900, 650),
-          touristPhoto("berlin,cathedral", 105, 900, 650)
+          seededPhoto("berlin-brandenburg-gate-gallery", 900, 650),
+          seededPhoto("berlin-reichstag-gallery", 900, 650),
+          seededPhoto("berlin-east-side-gallery-tour", 900, 650),
+          seededPhoto("berlin-museum-island-gallery", 900, 650)
         ],
         intro: "Big history, late-night neighborhoods, world-class museums, street art, parks, and food from everywhere.",
         photo: "Start grand at Brandenburg Gate, then let the city become stranger, smarter, and more local with each neighborhood.",
@@ -1040,12 +1041,12 @@
         name: "Bremen",
         days: "1 day",
         accent: "#a84d35",
-        image: touristPhoto("bremen,market-square,landmark", 301),
+        image: seededPhoto("bremen-schnoor-old-town-unique", 1500, 1000),
         gallery: [
-          touristPhoto("bremen,market-square", 302, 900, 650),
-          touristPhoto("bremen,schnoor", 303, 900, 650),
-          touristPhoto("bremen,town-hall", 304, 900, 650),
-          touristPhoto("bremen,old-town", 305, 900, 650)
+          seededPhoto("bremen-market-square-gallery", 900, 650),
+          seededPhoto("bremen-schnoor-gallery", 900, 650),
+          seededPhoto("bremen-town-hall-gallery", 900, 650),
+          seededPhoto("bremen-weser-river-gallery", 900, 650)
         ],
         intro: "Compact, charming, very walkable: fairy-tale market square, Schnoor lanes, brick expressionism, and river evenings.",
         photo: "Bremen is a one-day jewel. Keep it slow, walk the lanes, and let the old town details do the work.",
@@ -1130,12 +1131,12 @@
         name: "Munich",
         days: "3 days",
         accent: "#276577",
-        image: touristPhoto("munich,marienplatz,landmark", 601),
+        image: seededPhoto("munich-marienplatz-bavaria-unique", 1500, 1000),
         gallery: [
-          touristPhoto("munich,marienplatz", 602, 900, 650),
-          touristPhoto("munich,nymphenburg-palace", 603, 900, 650),
-          touristPhoto("munich,english-garden", 604, 900, 650),
-          touristPhoto("munich,olympiapark", 605, 900, 650)
+          seededPhoto("munich-marienplatz-gallery", 900, 650),
+          seededPhoto("munich-nymphenburg-palace-gallery", 900, 650),
+          seededPhoto("munich-english-garden-gallery", 900, 650),
+          seededPhoto("munich-olympiapark-gallery", 900, 650)
         ],
         intro: "Classic Bavaria: palace gardens, beer halls, market food, art museums, surf-watching, and huge urban parks.",
         photo: "Munich is elegant without trying too hard: start at Marienplatz, then move between markets, parks, and royal spaces.",
