@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Germany Tour Planner</title>
+  <style>
+    :root {
+      --ink: #17211d;
+      --muted: #5c6762;
+      --paper: #f7f3eb;
+      --panel: #fffaf1;
+      --line: rgba(23, 33, 29, 0.13);
+      --forest: #24483a;
+      --river: #276577;
+      --brick: #a84d35;
+      --gold: #d79b3e;
+      --rose: #bf6472;
+      --shadow: 0 20px 60px rgba(20, 30, 24, 0.16);
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(247, 243, 235, 0.94), rgba(247, 243, 235, 1)),
+        url("https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=1800&q=80") center/cover fixed;
+    }
+
+    @keyframes heroDrift {
+      from { background-size: 100% auto, cover; }
+      to { background-size: 100% auto, 112% auto; }
+    }
+
+    @keyframes softRise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    a { color: inherit; }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      align-items: end;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(12, 18, 16, 0.12), rgba(12, 18, 16, 0.7)),
+        url("https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=2200&q=85") center/cover;
+      color: #fffaf1;
+      animation: softRise 700ms ease both;
+    }
+
+    .hero-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding-bottom: 8vh;
+    }
+
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: #f1c66a;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 8vw, 7.4rem);
+      line-height: 0.94;
+      margin: 0;
+      max-width: 960px;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      max-width: 680px;
+      font-size: clamp(1.05rem, 2vw, 1.28rem);
+      line-height: 1.6;
+      color: rgba(255, 250, 241, 0.88);
+      margin: 22px 0 28px;
+    }
+
+    .hero-actions, .toolbar, .city-nav, .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .button, button {
+      border: 1px solid rgba(255, 250, 241, 0.4);
+      background: rgba(255, 250, 241, 0.13);
+      color: inherit;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 800;
+      backdrop-filter: blur(12px);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .button.primary {
+      background: #f1c66a;
+      border-color: #f1c66a;
+      color: #16211d;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 34px 0 70px;
+    }
+
+    .page-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 12px 0;
+      background: rgba(247, 243, 235, 0.92);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .page-nav button {
+      color: var(--ink);
+      border-color: var(--line);
+      background: rgba(255, 250, 241, 0.86);
+    }
+
+    .page-nav button.active {
+      color: #fffaf1;
+      background: var(--forest);
+      border-color: var(--forest);
+    }
+
+    section {
+      margin-top: 42px;
+    }
+
+    [data-page] {
+      display: none;
+    }
+
+    [data-page].is-visible {
+      display: block;
+      animation: softRise 360ms ease both;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.7rem, 3.5vw, 3rem);
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .overview {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .route-panel, .quick-panel, .planner, .sources, .qr-panel {
+      background: rgba(255, 250, 241, 0.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .route-panel {
+      padding: 22px;
+      min-height: 360px;
+      overflow: visible;
+    }
+
+    .route-track {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .route-stop {
+      min-height: 154px;
+      border-radius: var(--radius);
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+    }
+
+    .route-stop:hover {
+      border-color: rgba(36, 72, 58, 0.32);
+      box-shadow: 0 12px 30px rgba(20, 30, 24, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .route-stop::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 6px;
+      background: var(--accent);
+    }
+
+    .route-stop strong {
+      font-size: 1.04rem;
+      padding-top: 4px;
+      overflow-wrap: anywhere;
+    }
+
+    .route-days {
+      color: var(--ink);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .route-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .route-tags span {
+      color: var(--muted);
+      background: #f7f3eb;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 0.76rem;
+      line-height: 1.2;
+      font-weight: 750;
+    }
+
+    .quick-panel {
+      padding: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .stat {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .stat b {
+      font-size: 1.45rem;
+      color: var(--river);
+    }
+
+    .stat span {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .city-nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 12px 0;
+      background: rgba(247, 243, 235, 0.9);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .city-nav button, .toolbar button {
+      color: var(--ink);
+      border-color: var(--line);
+      background: rgba(255, 250, 241, 0.8);
+    }
+
+    .city-nav button.active, .toolbar button.active {
+      color: #fffaf1;
+      background: var(--forest);
+      border-color: var(--forest);
+    }
+
+    .city-layout {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .photo-card {
+      min-height: 640px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: sticky;
+      top: 74px;
+      box-shadow: var(--shadow);
+      background: #222;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      min-height: 640px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-copy {
+      position: absolute;
+      inset: auto 0 0;
+      padding: 22px;
+      color: #fff;
+      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.78));
+    }
+
+    .photo-copy h3 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      letter-spacing: 0;
+    }
+
+    .photo-copy p {
+      margin: 0;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .detail-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .planner {
+      padding: 18px;
+    }
+
+    .planner h3 {
+      margin: 0 0 12px;
+      font-size: 1.2rem;
+    }
+
+    .day-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .day, .tip, .food, .spot {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+
+    .day b, .tip b, .food b, .spot b {
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .day p, .tip p, .food p, .spot p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 0.94rem;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 7px 10px;
+      color: var(--muted);
+      background: #fff;
+      font-size: 0.86rem;
+      font-weight: 750;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .gallery img {
+      width: 100%;
+      aspect-ratio: 1 / 0.72;
+      object-fit: cover;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px rgba(20, 30, 24, 0.12);
+    }
+
+    .sources {
+      padding: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 0.94rem;
+    }
+
+    .sources a {
+      color: var(--forest);
+      font-weight: 750;
+    }
+
+    .qr-panel {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 22px;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .qr-frame {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .qr-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .qr-copy h3, .food-board h3 {
+      margin: 0 0 10px;
+    }
+
+    .qr-copy p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .phone-link {
+      display: inline-flex;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      color: var(--forest);
+      font-weight: 850;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      text-decoration: none;
+    }
+
+    .food-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .food-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      min-height: 100%;
+      transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .food-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(20, 30, 24, 0.13);
+    }
+
+    .food-card img {
+      width: 100%;
+      aspect-ratio: 1 / 0.62;
+      object-fit: cover;
+      display: block;
+    }
+
+    .food-card div {
+      padding: 14px;
+    }
+
+    .food-card b {
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .food-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.48;
+      font-size: 0.94rem;
+    }
+
+    .chat-shell {
+      display: grid;
+      grid-template-columns: 0.72fr 1.28fr;
+      gap: 16px;
+      align-items: stretch;
+      background: rgba(255, 250, 241, 0.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .chat-aside {
+      padding: 22px;
+      background:
+        linear-gradient(180deg, rgba(36, 72, 58, 0.92), rgba(39, 101, 119, 0.9)),
+        url("https://commons.wikimedia.org/wiki/Special:FilePath/The%20Cologne%20Cathedral%20and%20River%20Rhine%20%281%29.jpg") center/cover;
+      color: #fffaf1;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .chat-aside h3 {
+      font-size: clamp(1.7rem, 3vw, 2.6rem);
+      margin: 0 0 12px;
+      letter-spacing: 0;
+    }
+
+    .chat-aside p {
+      color: rgba(255, 250, 241, 0.86);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .chat-examples {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .chat-examples button {
+      justify-content: flex-start;
+      text-align: left;
+      background: rgba(255, 250, 241, 0.12);
+      border-color: rgba(255, 250, 241, 0.34);
+      color: #fffaf1;
+      min-height: 40px;
+    }
+
+    .chat-panel {
+      padding: 18px;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      gap: 12px;
+      min-height: 420px;
+    }
+
+    .chat-log {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      overflow-y: auto;
+      max-height: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      width: fit-content;
+      max-width: min(86%, 760px);
+      border-radius: var(--radius);
+      padding: 11px 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .message.assistant {
+      background: #f7f3eb;
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: var(--forest);
+      color: #fffaf1;
+    }
+
+    .chat-form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    .chat-form textarea {
+      min-height: 54px;
+      max-height: 140px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 13px 14px;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .chat-form button {
+      color: #fffaf1;
+      background: var(--forest);
+      border-color: var(--forest);
+      min-width: 98px;
+      justify-content: center;
+    }
+
+    .chat-form button:disabled {
+      opacity: 0.65;
+      cursor: progress;
+    }
+
+    @media (max-width: 920px) {
+      .overview, .city-layout, .chat-shell, .qr-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .route-track, .day-grid, .gallery, .food-board {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .photo-card {
+        position: relative;
+        top: 0;
+        min-height: 420px;
+      }
+
+      .photo-card img {
+        min-height: 420px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        min-height: 88vh;
+        padding: 18px;
+      }
+
+      main {
+        width: min(100% - 22px, 1180px);
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .section-head p {
+        margin-top: 8px;
+      }
+
+      .route-track, .day-grid, .mini-grid, .gallery, .food-board {
+        grid-template-columns: 1fr;
+      }
+
+      .city-nav {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+
+      .city-nav button {
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Local Germany route planner</div>
+      <h1>Germany Tour Planner</h1>
+      <p>A full English travel app for Berlin, Frankfurt, Munich, Bremen, Cologne, Hamburg, and Dresden: visual city guides, local food, photo spots, transport rhythm, and a practical day-by-day route.</p>
+      <div class="hero-actions">
+        <a class="button primary" href="#planner">Open planner</a>
+        <a class="button" href="#cities">Explore cities</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <nav class="page-nav" aria-label="Planner pages">
+      <button type="button" class="active" data-go-page="tour">Page 1 Tour Plan</button>
+      <button type="button" data-go-page="food">Page 2 Food</button>
+      <button type="button" data-go-page="phone">Page 3 Phone QR</button>
+      <button type="button" data-go-page="chat">Page 4 AI Chat</button>
+      <button type="button" data-go-page="notes">Page 5 Notes</button>
+    </nav>
+
+    <section id="planner" data-page="tour" class="is-visible">
+      <div class="section-head">
+        <h2>Best Route</h2>
+        <p>Designed for a balanced 12 to 14 day trip with fast rail links, strong local flavor, and fewer exhausting one-night hops.</p>
+      </div>
+      <div class="overview">
+        <div class="route-panel">
+          <h3>Suggested order</h3>
+          <p>Fly or train into Berlin, sweep north and west, pause on the Rhine, then finish with Bavaria and Saxony.</p>
+          <div class="route-track" id="routeTrack"></div>
+        </div>
+        <div class="quick-panel">
+          <div class="stat"><b>7</b><span>German cities with different moods: capital culture, harbor life, Rhine views, medieval lanes, and Bavarian classics.</span></div>
+          <div class="stat"><b>13</b><span>Comfortable days recommended. Add one extra day in Berlin or Munich if you like museums.</span></div>
+          <div class="stat"><b>ICE</b><span>Use DB long-distance trains for Berlin, Hamburg, Frankfurt, Cologne, Munich, and Dresden; regional links cover Bremen well.</span></div>
+          <div class="stat"><b>Local</b><span>Each city plan includes neighborhoods, casual food, evening walks, and non-rushed photo windows.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="city-nav is-visible" id="cityNav" data-page="tour" aria-label="City navigation"></nav>
+
+    <section id="cities" data-page="tour" class="is-visible">
+      <div class="section-head">
+        <h2 id="cityTitle">City Plan</h2>
+        <p id="cityIntro">Choose a city to see its full local plan.</p>
+      </div>
+      <div class="city-layout">
+        <article class="photo-card">
+          <img id="cityImage" alt="">
+          <div class="photo-copy">
+            <h3 id="photoTitle"></h3>
+            <p id="photoText"></p>
+          </div>
+        </article>
+        <div class="detail-stack">
+          <div class="planner">
+            <h3>Day-by-day plan</h3>
+            <div class="day-grid" id="dayGrid"></div>
+          </div>
+          <div class="planner">
+            <h3>Local cool stuff</h3>
+            <div class="mini-grid" id="localGrid"></div>
+          </div>
+          <div class="planner">
+            <h3>Food and evening vibe</h3>
+            <div class="mini-grid" id="foodGrid"></div>
+          </div>
+          <div class="planner">
+            <h3>Best photo stops</h3>
+            <div class="gallery" id="gallery"></div>
+          </div>
+          <div class="planner">
+            <h3>Trip tags</h3>
+            <div class="chips" id="chips"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="phone" data-page="phone">
+      <div class="section-head">
+        <h2>Open On Phone</h2>
+        <p>Scan this QR code from your phone while it is connected to the same Wi-Fi as this computer.</p>
+      </div>
+      <div class="qr-panel">
+        <div class="qr-frame">
+          <img id="qrCode" src="/qr.svg" alt="QR code to open the tour planner on phone">
+        </div>
+        <div class="qr-copy">
+          <h3>Phone link</h3>
+          <p>Keep VS Code running. If the page does not open, check that your phone and computer are on the same Wi-Fi and Windows Firewall allows Python on private networks.</p>
+          <a class="phone-link" id="phoneLink" href="#" target="_blank" rel="noreferrer">Loading phone link...</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="food-guide" data-page="food">
+      <div class="section-head">
+        <h2>Food & Local Stuff</h2>
+        <p>A fast food-focused layer for the trip: what to try, where the evening mood works, and what makes each city feel local.</p>
+      </div>
+      <div class="food-board">
+        <article class="food-card">
+          <img src="https://images.unsplash.com/photo-1564758565388-0d5da0cbb08c?auto=format&fit=crop&w=900&q=80" alt="Currywurst in Berlin">
+          <div><b>Berlin</b><p>Currywurst, doner, Vietnamese bowls, Turkish bakeries, and Markthalle Neun. Best vibe: Kreuzberg canal, Prenzlauer Berg cafes, late casual eats.</p></div>
+        </article>
+        <article class="food-card">
+          <img src="https://images.unsplash.com/photo-1559847844-5315695dadae?auto=format&fit=crop&w=900&q=80" alt="Fish sandwich">
+          <div><b>Hamburg</b><p>Fischbrotchen, harbor coffee, Portuguese Quarter pastries, and Sunday Fischmarkt if you wake early. Best vibe: Speicherstadt night walk after dinner.</p></div>
+        </article>
+        <article class="food-card">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80" alt="Bremen local food">
+          <div><b>Bremen</b><p>Try Knipp if you want something very local, plus North German fish, beer, and coffee. Best vibe: Schlachte promenade beside the Weser.</p></div>
+        </article>
+        <article class="food-card">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80" alt="Frankfurt tavern food">
+          <div><b>Frankfurt</b><p>Apfelwein, Grune Sosse, Handkas, schnitzel, and Kleinmarkthalle snacks. Best vibe: Sachsenhausen taverns and a Main river sunset.</p></div>
+        </article>
+        <article class="food-card">
+          <img src="https://images.unsplash.com/photo-1608270586620-248524c67de9?auto=format&fit=crop&w=900&q=80" alt="Kolsch beer">
+          <div><b>Cologne</b><p>Kolsch, Himmel un Aad, Halver Hahn, brewhouse plates, and chocolate museum treats. Best vibe: old-town brewery, then Belgian Quarter.</p></div>
+        </article>
+        <article class="food-card">
+          <img src="https://images.unsplash.com/photo-1577906096429-f73c2c312435?auto=format&fit=crop&w=900&q=80" alt="Munich Weisswurst">
+          <div><b>Munich</b><p>Weisswurst, pretzels, Obatzda, roast pork, strudel, and beer garden classics. Best vibe: Viktualienmarkt lunch and English Garden beer garden.</p></div>
+        </article>
+        <article class="food-card">
+          <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=900&q=80" alt="Dresden cake">
+          <div><b>Dresden</b><p>Eierschecke cake, coffee houses, Saxon comfort food, and Neustadt casual eats. Best vibe: Elbe sunset, then Neustadt bars and cafes.</p></div>
+        </article>
+        <article class="food-card">
+          <img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=900&q=80" alt="German ICE train">
+          <div><b>Train snack strategy</b><p>Carry water, bakery rolls, fruit, and one sweet snack. Eat proper meals near stations only in bigger cities; small transfers can be rushed.</p></div>
+        </article>
+        <article class="food-card">
+          <img src="https://images.unsplash.com/photo-1513125370-3460ebe3401b?auto=format&fit=crop&w=900&q=80" alt="German market atmosphere">
+          <div><b>Market habit</b><p>Whenever tired, search for a market hall, weekly market, or riverside promenade. They are easy wins for snacks, photos, and local rhythm.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="notes" data-page="notes">
+      <div class="section-head">
+        <h2>Practical Notes</h2>
+        <p>Keep bookings flexible around museum closing days and book popular timed attractions early, especially in Hamburg and Munich.</p>
+      </div>
+      <div class="overview">
+        <div class="planner">
+          <h3>Packing and rhythm</h3>
+          <div class="mini-grid">
+            <div class="tip"><b>Train strategy</b><p>Buy long-distance tickets early when your dates are fixed. Keep regional days flexible for Bremen and Cologne side trips.</p></div>
+            <div class="tip"><b>Daily pace</b><p>Use mornings for icons, afternoons for neighborhoods, evenings for waterfronts, squares, and casual local food.</p></div>
+            <div class="tip"><b>Budget style</b><p>Mix paid museums with free viewpoints, old-town walks, markets, parks, churches, and harbor or river promenades.</p></div>
+            <div class="tip"><b>Weather</b><p>Germany changes fast. Carry a light rain layer and plan one indoor museum option for every city.</p></div>
+          </div>
+        </div>
+        <div class="sources">
+          <strong>Planning references:</strong>
+          Official tourism and attraction pages were used as anchors:
+          <a href="https://www.visitberlin.de/en/top-sights-berlin" target="_blank" rel="noreferrer">visitBerlin</a>,
+          <a href="https://frankfurt.de/english/discover-and-experience/sightseeing/historical-buildings/roemerberg" target="_blank" rel="noreferrer">Frankfurt city tourism</a>,
+          <a href="https://www.munich.travel/en/topics/urban-districts/munich-sights-at-a-glance" target="_blank" rel="noreferrer">Munich tourism</a>,
+          <a href="https://www.bremen.de/sehenswuerdigkeiten/schnoor" target="_blank" rel="noreferrer">Bremen tourism</a>,
+          <a href="https://www.cologne-tourism.com/see-experience/poi/cologne-old-town/" target="_blank" rel="noreferrer">Cologne tourism</a>,
+          <a href="https://www.hamburg.de/tourismus/sehenswuerdigkeiten/speicherstadt" target="_blank" rel="noreferrer">Hamburg tourism</a>,
+          and <a href="https://www.dresden.de/en/tourism/attractions/sights/top-ten.php" target="_blank" rel="noreferrer">Dresden tourism</a>.
+          Images are loaded from Unsplash for a beautiful local preview.
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-chat" data-page="chat">
+      <div class="section-head">
+        <h2>AI Travel Chat</h2>
+        <p>Ask for route changes, budgets, food plans, rainy-day swaps, train pacing, or a custom day plan for any city.</p>
+      </div>
+      <div class="chat-shell">
+        <aside class="chat-aside">
+          <div>
+            <h3>Plan with Nemotron</h3>
+          </div>
+          <div class="chat-examples">
+            <button type="button" data-prompt="Make me a 13-day Germany route with train order and hotel-night counts.">13-day route</button>
+            <button type="button" data-prompt="Give me a local food plan for Berlin, Hamburg, Cologne, Munich, and Dresden.">Food plan</button>
+            <button type="button" data-prompt="I like beautiful photos and relaxed walking. Which stops should I prioritize?">Photo route</button>
+          </div>
+        </aside>
+        <div class="chat-panel">
+          <div class="chat-log" id="chatLog" aria-live="polite">
+            <div class="message assistant">Hi. Ask me anything about this seven-city Germany tour, and I will help shape it into a practical plan.</div>
+          </div>
+          <form class="chat-form" id="chatForm">
+            <textarea id="chatInput" placeholder="Ask for a custom tour plan..." required></textarea>
+            <button type="submit" id="chatSend">Send</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const commons = (fileName) => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(fileName)}`;
+
+    const cities = [
+      {
+        name: "Berlin",
+        days: "3 days",
+        accent: "#bf6472",
+        image: "https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=1500&q=82",
+        gallery: [
+          "https://images.unsplash.com/photo-1587330979470-3016b6702d89?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1559564484-e48b3e040ff4?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1566404791232-af9fe0ae8f8e?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1600260452121-4f2416e55c28?auto=format&fit=crop&w=900&q=80"
+        ],
+        intro: "Big history, late-night neighborhoods, world-class museums, street art, parks, and food from everywhere.",
+        photo: "Start grand at Brandenburg Gate, then let the city become stranger, smarter, and more local with each neighborhood.",
+        route: [
+          ["Day 1", "Brandenburg Gate, Reichstag exterior, Holocaust Memorial, Unter den Linden, Museum Island sunset."],
+          ["Day 2", "East Side Gallery, Kreuzberg cafes, canal walk, Markthalle Neun or street-food dinner."],
+          ["Day 3", "Charlottenburg Palace or Tiergarten, then Prenzlauer Berg, Mauerpark, and a relaxed beer garden."]
+        ],
+        local: [
+          ["Neighborhood drift", "Kreuzberg, Neukolln, and Prenzlauer Berg give the best local rhythm beyond the monuments."],
+          ["Culture hit", "Museum Island is the strongest single museum cluster. Reserve ahead if you want a major museum day."],
+          ["Street art", "East Side Gallery and RAW-Gelande are easy visual stops for a more urban Berlin feel."],
+          ["Slow pause", "Tiergarten is perfect between heavy history stops."]
+        ],
+        food: [
+          ["Try", "Currywurst, doner kebab, Vietnamese food, Turkish bakeries, and craft coffee."],
+          ["Evening", "Canal-side Kreuzberg, Hackescher Markt, or Prenzlauer Berg wine bars."]
+        ],
+        tags: ["History", "Museums", "Street art", "Nightlife", "Food halls"]
+      },
+      {
+        name: "Hamburg",
+        days: "2 days",
+        accent: "#276577",
+        image: commons("HamburgSpeicherstadt.jpg"),
+        gallery: [
+          commons("Hamburg - Speicherstadt (21).jpg"),
+          commons("Hamburg - Speicherstadt (20).jpg"),
+          commons("Hamburg - Speicherstadt (1).jpg"),
+          commons("Speicherstadt - Hamburg.jpg")
+        ],
+        intro: "Harbor drama, red-brick warehouses, canals, music, fish-market energy, and some of Germany's best waterfront walks.",
+        photo: "Hamburg is best when you stay near the water: Speicherstadt by day, Elbphilharmonie glow by evening.",
+        route: [
+          ["Day 1", "Speicherstadt, Kontorhausviertel, Miniatur Wunderland, Elbphilharmonie Plaza, harbor sunset."],
+          ["Day 2", "St. Pauli, Landungsbrucken, ferry ride, Portuguese Quarter lunch, Planten un Blomen."],
+          ["Bonus", "If it is Sunday, start very early at the Fischmarkt, then recover with coffee by the canals."]
+        ],
+        local: [
+          ["Must book", "Miniatur Wunderland is popular and often crowded, so timed tickets are worth it."],
+          ["Free view", "Elbphilharmonie Plaza gives a strong city-and-harbor panorama."],
+          ["Local transport", "Use public ferries as a cheap harbor cruise."],
+          ["Architecture", "Chilehaus and Speicherstadt are a compact UNESCO-style walk."]
+        ],
+        food: [
+          ["Try", "Fischbrotchen, Labskaus if curious, Portuguese pastries, harbor coffee."],
+          ["Evening", "Schanze for casual bars, St. Pauli for music, Speicherstadt for cinematic night photos."]
+        ],
+        tags: ["Harbor", "UNESCO", "Architecture", "Miniatures", "Music"]
+      },
+      {
+        name: "Bremen",
+        days: "1 day",
+        accent: "#a84d35",
+        image: "https://images.unsplash.com/photo-1608198093002-ad4e005484ec?auto=format&fit=crop&w=1500&q=82",
+        gallery: [
+          "https://images.unsplash.com/photo-1608198093002-ad4e005484ec?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1629225614253-846a99ac8aae?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1573164574397-dd250bc8a598?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1616627986027-3319d499b8bc?auto=format&fit=crop&w=900&q=80"
+        ],
+        intro: "Compact, charming, very walkable: fairy-tale market square, Schnoor lanes, brick expressionism, and river evenings.",
+        photo: "Bremen is a one-day jewel. Keep it slow, walk the lanes, and let the old town details do the work.",
+        route: [
+          ["Morning", "Market Square, Town Hall exterior, Roland statue, Bremen Town Musicians, cathedral area."],
+          ["Afternoon", "Schnoor quarter, tiny shops, cafes, then Bottcherstrasse for brick architecture."],
+          ["Evening", "Schlachte river promenade for beer, dinner, and a calm Weser walk."]
+        ],
+        local: [
+          ["Schnoor", "The oldest quarter has narrow cobbled lanes, small stores, cafes, and close-set historic houses."],
+          ["Bottcherstrasse", "A short but memorable street for unusual brickwork and design details."],
+          ["Town Musicians", "Quick iconic photo, but go early to avoid the queue."],
+          ["River time", "Schlachte is the best relaxed local finish."]
+        ],
+        food: [
+          ["Try", "Knipp, Labskaus, coffee, local beer, and North German fish dishes."],
+          ["Evening", "Choose the Schlachte promenade when the weather is good."]
+        ],
+        tags: ["Old town", "Fairy tale", "Walkable", "River", "Brick lanes"]
+      },
+      {
+        name: "Frankfurt",
+        days: "1 to 2 days",
+        accent: "#d79b3e",
+        image: commons("Frankfurt skyline.jpg"),
+        gallery: [
+          commons("Frankfurt skyline.jpg"),
+          commons("Frankfurt-Skyline.jpg"),
+          commons("Frankfurt Skyline-.jpg"),
+          commons("Frankfurt am Main skyline.jpg")
+        ],
+        intro: "Germany's skyline city with a reconstructed old town, serious museums, apple-wine taverns, and riverbank energy.",
+        photo: "Frankfurt works best when you contrast glass towers with Romerberg, the Main river, and Sachsenhausen taverns.",
+        route: [
+          ["Morning", "Romerberg, New Old Town, cathedral, Eiserner Steg bridge."],
+          ["Afternoon", "Stadel Museum or Museumsufer, Main Tower viewpoint, riverside walk."],
+          ["Evening", "Sachsenhausen apple-wine taverns for green sauce, schnitzel, and Apfelwein."]
+        ],
+        local: [
+          ["Best contrast", "Old town lanes sit minutes from the financial skyline."],
+          ["Museum pick", "Stadel is the strongest classic choice on the Museumsufer."],
+          ["Viewpoint", "Main Tower gives the cleanest skyline view if visibility is good."],
+          ["Green pause", "Palmengarten is a beautiful reset if you add a second day."]
+        ],
+        food: [
+          ["Try", "Apfelwein, Grune Sosse, Handkas, schnitzel, and market snacks at Kleinmarkthalle."],
+          ["Evening", "Sachsenhausen for traditional taverns; riverbank for sunset."]
+        ],
+        tags: ["Skyline", "Museums", "Old town", "Apple wine", "Markets"]
+      },
+      {
+        name: "Cologne",
+        days: "1 day",
+        accent: "#24483a",
+        image: commons("The Cologne Cathedral and River Rhine (1).jpg"),
+        gallery: [
+          commons("The Cologne Cathedral and River Rhine (1).jpg"),
+          commons("Cologne Cathedral.jpg"),
+          commons("Cologne cathedral.jpg"),
+          commons("Exterior of Cologne Cathedral-.jpg")
+        ],
+        intro: "A Rhine city with the mighty Cologne Cathedral, old-town brewery culture, river bridges, museums, and lively local neighborhoods.",
+        photo: "Cologne is your Rhine city hit: the cathedral dominates the skyline, the old town stays social, and the river gives easy sunset walks.",
+        route: [
+          ["Morning", "Cologne Cathedral, cathedral treasury or tower climb, Hohenzollern Bridge, Rhine photo walk."],
+          ["Afternoon", "Old Town lanes, Great St. Martin, Ludwig Museum or Chocolate Museum, riverside coffee."],
+          ["Evening", "Traditional brewhouse dinner with Kolsch, then Belgian Quarter or Rhine promenade drinks."]
+        ],
+        local: [
+          ["Cathedral first", "Go early or late for the best space around the Dom and Hohenzollern Bridge."],
+          ["Old Town", "Colorful reconstructed lanes near the Rhine are easy to combine with breweries and small squares."],
+          ["Museum pick", "Choose Ludwig Museum for modern art or the Chocolate Museum for an easy fun stop."],
+          ["Neighborhood", "Belgian Quarter gives boutiques, cafes, bars, and a more local evening mood."]
+        ],
+        food: [
+          ["Try", "Kolsch beer, Himmel un Aad, Halver Hahn, schnitzel, and brewhouse classics."],
+          ["Evening", "Old Town brewhouses for tradition; Belgian Quarter for a younger local vibe."]
+        ],
+        tags: ["Cathedral", "Rhine", "Brewhouses", "Museums", "Old town"]
+      },
+      {
+        name: "Munich",
+        days: "3 days",
+        accent: "#276577",
+        image: "https://images.unsplash.com/photo-1595867818082-083862f3d630?auto=format&fit=crop&w=1500&q=82",
+        gallery: [
+          "https://images.unsplash.com/photo-1595867818082-083862f3d630?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1543251552-973991505a5d?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1527866959252-deab85ef7d1b?auto=format&fit=crop&w=900&q=80",
+          "https://images.unsplash.com/photo-1554072675-66db59dba46f?auto=format&fit=crop&w=900&q=80"
+        ],
+        intro: "Classic Bavaria: palace gardens, beer halls, market food, art museums, surf-watching, and huge urban parks.",
+        photo: "Munich is elegant without trying too hard: start at Marienplatz, then move between markets, parks, and royal spaces.",
+        route: [
+          ["Day 1", "Marienplatz, New Town Hall, Viktualienmarkt lunch, Frauenkirche, beer hall or beer garden."],
+          ["Day 2", "Nymphenburg Palace, Kunstareal or Deutsches Museum, evening in Glockenbachviertel."],
+          ["Day 3", "English Garden, Eisbach wave, Chinese Tower, Olympiapark or BMW Welt."]
+        ],
+        local: [
+          ["Daily classic", "The Marienplatz Glockenspiel is usually watched late morning and midday; arrive early for space."],
+          ["Green icon", "English Garden is a full city experience, not just a park stop."],
+          ["Museum choice", "Pick Deutsches Museum for science or Pinakotheken for art."],
+          ["Day trip option", "If you add time, choose Dachau memorial, Neuschwanstein, or Salzburg depending on your mood."]
+        ],
+        food: [
+          ["Try", "Weisswurst, pretzels, Obatzda, roast pork, apple strudel, and beer garden classics."],
+          ["Evening", "Glockenbachviertel for bars, Hofbrauhaus for tradition, or a calmer beer garden."]
+        ],
+        tags: ["Bavaria", "Parks", "Palaces", "Beer gardens", "Museums"]
+      },
+      {
+        name: "Dresden",
+        days: "2 days",
+        accent: "#a84d35",
+        image: commons("The Dresden Frauenkirche.jpg"),
+        gallery: [
+          commons("The Dresden Frauenkirche.jpg"),
+          commons("Dresden frauenkirche.jpg"),
+          commons("Dresden.Frauenkirche.JPG"),
+          commons("Zwinger Dresden 2013.jpg")
+        ],
+        intro: "Baroque drama on the Elbe: Frauenkirche, Zwinger, Semperoper, porcelain history, Neustadt murals, and river sunsets.",
+        photo: "Dresden feels theatrical. The old town is compact, luminous, and best at golden hour along the Elbe.",
+        route: [
+          ["Day 1", "Frauenkirche, Neumarkt, Procession of Princes, Royal Palace, Bruehl's Terrace sunset."],
+          ["Day 2", "Zwinger Palace, Old Masters or Green Vault, Semperoper exterior, Neustadt evening."],
+          ["Bonus", "Add Pillnitz Palace or Saxon Switzerland if you extend by one day."]
+        ],
+        local: [
+          ["Baroque core", "The old town gathers major sights very close together, so walking is easy."],
+          ["Museum pick", "Zwinger and the Royal Palace are the big art-and-treasure choices."],
+          ["View", "Bruehl's Terrace is called the Balcony of Europe for a reason."],
+          ["Contrast", "Neustadt gives street art, bars, cafes, and a younger local feel."]
+        ],
+        food: [
+          ["Try", "Saxon cake, coffee houses, regional dumplings, and Neustadt casual food."],
+          ["Evening", "Elbe sunset first, then Neustadt for dinner and drinks."]
+        ],
+        tags: ["Baroque", "Museums", "Elbe", "Opera", "Street art"]
+      }
+    ];
+
+    const routeTrack = document.querySelector("#routeTrack");
+    const cityNav = document.querySelector("#cityNav");
+    const cityTitle = document.querySelector("#cityTitle");
+    const cityIntro = document.querySelector("#cityIntro");
+    const cityImage = document.querySelector("#cityImage");
+    const photoTitle = document.querySelector("#photoTitle");
+    const photoText = document.querySelector("#photoText");
+    const dayGrid = document.querySelector("#dayGrid");
+    const localGrid = document.querySelector("#localGrid");
+    const foodGrid = document.querySelector("#foodGrid");
+    const gallery = document.querySelector("#gallery");
+    const chips = document.querySelector("#chips");
+
+    const routeOrder = ["Berlin", "Hamburg", "Bremen", "Frankfurt", "Cologne", "Munich", "Dresden"];
+
+    function fallbackSvg(label) {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 850">
+          <defs>
+            <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#276577"/>
+              <stop offset="0.55" stop-color="#24483a"/>
+              <stop offset="1" stop-color="#d79b3e"/>
+            </linearGradient>
+          </defs>
+          <rect width="1200" height="850" fill="url(#sky)"/>
+          <path d="M0 590 C160 515 260 650 420 570 C610 470 760 650 940 555 C1050 500 1130 520 1200 485 L1200 850 L0 850 Z" fill="#fffaf1" opacity="0.9"/>
+          <path d="M170 510 L260 330 L350 510 Z M720 510 L835 250 L950 510 Z" fill="#17211d" opacity="0.55"/>
+          <text x="72" y="150" fill="#fffaf1" font-family="Arial, sans-serif" font-size="72" font-weight="700">${label}</text>
+          <text x="76" y="220" fill="#fffaf1" opacity="0.82" font-family="Arial, sans-serif" font-size="32">Germany tour planner</text>
+        </svg>`;
+      return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+    }
+
+    function setSafeImage(image, src, alt, label) {
+      image.alt = alt;
+      image.onerror = () => {
+        image.onerror = null;
+        image.src = fallbackSvg(label);
+      };
+      image.src = src;
+    }
+
+    function makeCard(city) {
+      const item = document.createElement("div");
+      item.className = "route-stop";
+      item.style.setProperty("--accent", city.accent);
+      const tags = city.tags.slice(0, 3).map((tag) => `<span>${tag}</span>`).join("");
+      item.innerHTML = `<strong>${city.name}</strong><div class="route-days">${city.days}</div><div class="route-tags">${tags}</div>`;
+      item.addEventListener("click", () => selectCity(city.name));
+      return item;
+    }
+
+    function renderMini(container, rows, className) {
+      container.innerHTML = "";
+      rows.forEach(([title, text]) => {
+        const item = document.createElement("div");
+        item.className = className;
+        item.innerHTML = `<b>${title}</b><p>${text}</p>`;
+        container.appendChild(item);
+      });
+    }
+
+    function selectCity(name) {
+      const city = cities.find((item) => item.name === name);
+      cityTitle.textContent = `${city.name} Tour Plan`;
+      cityIntro.textContent = city.intro;
+      setSafeImage(cityImage, city.image, `${city.name} travel photography`, city.name);
+      photoTitle.textContent = city.name;
+      photoText.textContent = city.photo;
+      renderMini(dayGrid, city.route, "day");
+      renderMini(localGrid, city.local, "spot");
+      renderMini(foodGrid, city.food, "food");
+      gallery.innerHTML = "";
+      city.gallery.forEach((src, index) => {
+        const image = document.createElement("img");
+        setSafeImage(image, src, `${city.name} photo ${index + 1}`, city.name);
+        gallery.appendChild(image);
+      });
+      chips.innerHTML = "";
+      city.tags.forEach((tag) => {
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = tag;
+        chips.appendChild(chip);
+      });
+      document.querySelectorAll(".city-nav button").forEach((button) => {
+        button.classList.toggle("active", button.textContent === city.name);
+      });
+    }
+
+    routeOrder.forEach((name) => {
+      const city = cities.find((item) => item.name === name);
+      routeTrack.appendChild(makeCard(city));
+    });
+
+    cities.forEach((city) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = city.name;
+      button.addEventListener("click", () => {
+        selectCity(city.name);
+        document.querySelector("#cities").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      cityNav.appendChild(button);
+    });
+
+    selectCity("Berlin");
+
+    const chatLog = document.querySelector("#chatLog");
+    const chatForm = document.querySelector("#chatForm");
+    const chatInput = document.querySelector("#chatInput");
+    const chatSend = document.querySelector("#chatSend");
+    const phoneLink = document.querySelector("#phoneLink");
+    const qrCode = document.querySelector("#qrCode");
+    const chatHistory = [];
+
+    function showPage(page) {
+      document.querySelectorAll("[data-page]").forEach((element) => {
+        element.classList.toggle("is-visible", element.dataset.page === page);
+      });
+      document.querySelectorAll("[data-go-page]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.goPage === page);
+      });
+      document.querySelector("main").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    document.querySelectorAll("[data-go-page]").forEach((button) => {
+      button.addEventListener("click", () => showPage(button.dataset.goPage));
+    });
+
+    function addMessage(role, content) {
+      const message = document.createElement("div");
+      message.className = `message ${role}`;
+      message.textContent = content;
+      chatLog.appendChild(message);
+      chatLog.scrollTop = chatLog.scrollHeight;
+      if (role === "user" || role === "assistant") {
+        chatHistory.push({ role, content });
+      }
+      return message;
+    }
+
+    async function sendChat(message) {
+      addMessage("user", message);
+      chatInput.value = "";
+      chatSend.disabled = true;
+      chatSend.textContent = "Thinking";
+      const pending = addMessage("assistant", "Planning...");
+
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message,
+            history: chatHistory.slice(0, -2)
+          })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || "The chat request failed.");
+        }
+        pending.textContent = data.reply;
+        chatHistory[chatHistory.length - 1].content = data.reply;
+      } catch (error) {
+        pending.textContent = error.message;
+        chatHistory[chatHistory.length - 1].content = error.message;
+      } finally {
+        chatSend.disabled = false;
+        chatSend.textContent = "Send";
+        chatInput.focus();
+      }
+    }
+
+    chatForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const message = chatInput.value.trim();
+      if (message) {
+        sendChat(message);
+      }
+    });
+
+    document.querySelectorAll("[data-prompt]").forEach((button) => {
+      button.addEventListener("click", () => {
+        chatInput.value = button.dataset.prompt;
+        chatInput.focus();
+      });
+    });
+
+    document.querySelectorAll(".food-card img").forEach((image) => {
+      image.onerror = () => {
+        image.onerror = null;
+        image.src = fallbackSvg(image.alt || "Food");
+      };
+    });
+
+    async function loadPhoneLink() {
+      try {
+        const response = await fetch("/api/info");
+        const data = await response.json();
+        if (data.phoneUrl) {
+          phoneLink.href = data.phoneUrl;
+          phoneLink.textContent = data.phoneUrl;
+          qrCode.src = `/qr.svg?t=${Date.now()}`;
+        }
+      } catch (error) {
+        phoneLink.textContent = "Run app.py from VS Code to generate the phone link.";
+      }
+    }
+
+    loadPhoneLink();
+  </script>
+</body>
+</html>
