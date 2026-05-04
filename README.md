@@ -1,22 +1,7 @@
-# Germany Tour Planner
+Discover Germany like never before with an all-in-one travel planning platform designed to make your journey effortless and exciting. From crafting the perfect itinerary to exploring must-visit destinations, this app helps you plan every detail of your Germany trip with ease.
 
-## Run in VS Code
+Dive into a dedicated food section that showcases authentic German cuisine, local favorites, and must-try dishes—so you don’t just visit Germany, you experience it. Whether you're craving street food or traditional meals, everything is curated to guide your taste journey.
 
-1. Open this folder in VS Code:
-   `C:\Users\Sourav\Documents\Codex\2026-05-04\make-me-a-website-app-steamlit`
-2. Paste your OpenRouter API key into:
-   `secrets\openrouter_api_key.txt`
-3. Open `app.py`.
-4. Click the Run button in VS Code, or press `F5`.
-5. The website opens automatically in your browser.
+Need help or have questions? An integrated AI assistant is always ready to guide you—whether it’s travel tips, budgeting, hidden gems, or personalized recommendations.
 
-If the browser does not open, copy the `Open: http://127.0.0.1:.../index.html` link printed in the VS Code terminal.
-
-## Open on phone
-
-After running `app.py`, scroll to the **Open On Phone** section and scan the QR code.
-Your phone must be on the same Wi-Fi/network as this computer.
-If Windows asks whether Python can use the network, allow it on private networks.
-
-The AI chat uses this OpenRouter model:
-`nvidia/nemotron-3-super-120b-a12b:free`
+Plan smarter, explore deeper, and travel better—all in one place.
