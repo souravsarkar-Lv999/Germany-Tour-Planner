@@ -324,16 +324,23 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      padding: 12px 0;
+      padding: 26px 0 18px;
+      margin: 18px 0 18px;
       background: rgba(247, 243, 235, 0.9);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--line);
+      justify-content: center;
+      gap: 14px;
     }
 
     .city-nav button, .toolbar button {
       color: var(--ink);
       border-color: var(--line);
       background: rgba(255, 250, 241, 0.8);
+      min-height: 58px;
+      min-width: 118px;
+      justify-content: center;
+      font-size: 1rem;
     }
 
     .city-nav button.active, .toolbar button.active {
@@ -537,13 +544,19 @@
 
     .github-link {
       display: inline-flex;
+      align-items: center;
+      justify-content: center;
       color: #fffaf1;
       background: var(--forest);
+      border: 1px solid var(--forest);
       border-radius: var(--radius);
-      padding: 12px 14px;
+      padding: 12px 16px;
       margin-top: 12px;
       font-weight: 850;
       text-decoration: none;
+      min-height: 48px;
+      width: fit-content;
+      max-width: 100%;
       transition: transform 160ms ease, box-shadow 160ms ease;
     }
 
@@ -924,7 +937,7 @@
           <br><br>
           <strong>Creator GitHub:</strong>
           <br>
-          <a class="github-link" href="https://github.com/souravsarkar-Lv999" target="_blank" rel="noreferrer">github.com/souravsarkar-Lv999</a>
+          <a class="github-link" href="https://github.com/souravsarkar-Lv999" target="_blank" rel="noreferrer"><span>Open Sourav's GitHub</span></a>
         </div>
       </div>
     </section>
@@ -960,20 +973,18 @@
 
   <script>
     const commons = (fileName) => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(fileName)}`;
-    const travelPhoto = (seed) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/1500/1000`;
-    const travelThumb = (seed) => `https://picsum.photos/seed/${encodeURIComponent(seed)}/900/650`;
 
     const cities = [
       {
         name: "Berlin",
         days: "3 days",
         accent: "#bf6472",
-        image: travelPhoto("berlin-brandenburg-gate-city-tour"),
+        image: commons("Brandenburger Tor abends.jpg"),
         gallery: [
-          travelThumb("berlin-museum-island"),
-          travelThumb("berlin-east-side-gallery"),
-          travelThumb("berlin-kreuzberg-evening"),
-          travelThumb("berlin-tiergarten")
+          commons("Brandenburger Tor abends.jpg"),
+          commons("Reichstag building Berlin view from west before sunset.jpg"),
+          commons("East Side Gallery Berlin 2014.jpg"),
+          commons("Berliner Dom bei Nacht.jpg")
         ],
         intro: "Big history, late-night neighborhoods, world-class museums, street art, parks, and food from everywhere.",
         photo: "Start grand at Brandenburg Gate, then let the city become stranger, smarter, and more local with each neighborhood.",
@@ -998,12 +1009,12 @@
         name: "Hamburg",
         days: "2 days",
         accent: "#276577",
-        image: travelPhoto("hamburg-speicherstadt-harbor"),
+        image: commons("Speicherstadt in Hamburg 2015.jpg"),
         gallery: [
-          travelThumb("hamburg-speicherstadt-canals"),
-          travelThumb("hamburg-elbphilharmonie"),
-          travelThumb("hamburg-harbor-sunset"),
-          travelThumb("hamburg-st-pauli")
+          commons("Speicherstadt in Hamburg 2015.jpg"),
+          commons("Elbphilharmonie Hamburg 2016.jpg"),
+          commons("Hamburg Landungsbrücken 2015.jpg"),
+          commons("Hamburg Speicherstadt Wasserschloss 2017.jpg")
         ],
         intro: "Harbor drama, red-brick warehouses, canals, music, fish-market energy, and some of Germany's best waterfront walks.",
         photo: "Hamburg is best when you stay near the water: Speicherstadt by day, Elbphilharmonie glow by evening.",
@@ -1028,12 +1039,12 @@
         name: "Bremen",
         days: "1 day",
         accent: "#a84d35",
-        image: travelPhoto("bremen-old-town-schnoor"),
+        image: commons("Bremen Marktplatz Panorama.jpg"),
         gallery: [
-          travelThumb("bremen-schnoor-lanes"),
-          travelThumb("bremen-town-hall"),
-          travelThumb("bremen-river-weser"),
-          travelThumb("bremen-bottcherstrasse")
+          commons("Bremen Marktplatz Panorama.jpg"),
+          commons("Schnoorviertel Bremen 2012.jpg"),
+          commons("Bremen Roland 2017.jpg"),
+          commons("Böttcherstraße Bremen 2012.jpg")
         ],
         intro: "Compact, charming, very walkable: fairy-tale market square, Schnoor lanes, brick expressionism, and river evenings.",
         photo: "Bremen is a one-day jewel. Keep it slow, walk the lanes, and let the old town details do the work.",
@@ -1058,12 +1069,12 @@
         name: "Frankfurt",
         days: "1 to 2 days",
         accent: "#d79b3e",
-        image: travelPhoto("frankfurt-skyline-main-river"),
+        image: commons("Frankfurt Skyline at night.jpg"),
         gallery: [
-          travelThumb("frankfurt-romerberg"),
-          travelThumb("frankfurt-main-tower"),
-          travelThumb("frankfurt-museumsufer"),
-          travelThumb("frankfurt-sachsenhausen")
+          commons("Frankfurt Skyline at night.jpg"),
+          commons("Frankfurt Am Main-Römerberg-Ansicht vom Domturm-20110525.jpg"),
+          commons("Main Tower Frankfurt 2010.jpg"),
+          commons("Eiserner Steg Frankfurt 2014.jpg")
         ],
         intro: "Germany's skyline city with a reconstructed old town, serious museums, apple-wine taverns, and riverbank energy.",
         photo: "Frankfurt works best when you contrast glass towers with Romerberg, the Main river, and Sachsenhausen taverns.",
@@ -1088,12 +1099,12 @@
         name: "Cologne",
         days: "1 day",
         accent: "#24483a",
-        image: travelPhoto("cologne-cathedral-rhine"),
+        image: commons("Kölner Dom und Hohenzollernbrücke Abend.jpg"),
         gallery: [
-          travelThumb("cologne-dom"),
-          travelThumb("cologne-hohenzollern-bridge"),
-          travelThumb("cologne-old-town"),
-          travelThumb("cologne-rhine-evening")
+          commons("Kölner Dom und Hohenzollernbrücke Abend.jpg"),
+          commons("Cologne Cathedral from the east.jpg"),
+          commons("Hohenzollernbrücke Köln 2014.jpg"),
+          commons("Groß St. Martin Köln 2012.jpg")
         ],
         intro: "A Rhine city with the mighty Cologne Cathedral, old-town brewery culture, river bridges, museums, and lively local neighborhoods.",
         photo: "Cologne is your Rhine city hit: the cathedral dominates the skyline, the old town stays social, and the river gives easy sunset walks.",
@@ -1118,12 +1129,12 @@
         name: "Munich",
         days: "3 days",
         accent: "#276577",
-        image: travelPhoto("munich-marienplatz-bavaria"),
+        image: commons("Marienplatz München Neues Rathaus.jpg"),
         gallery: [
-          travelThumb("munich-viktualienmarkt"),
-          travelThumb("munich-english-garden"),
-          travelThumb("munich-nymphenburg"),
-          travelThumb("munich-beer-garden")
+          commons("Marienplatz München Neues Rathaus.jpg"),
+          commons("Schloss Nymphenburg München 2013.jpg"),
+          commons("Englischer Garten München Monopteros.jpg"),
+          commons("Munich Olympiapark 2014.jpg")
         ],
         intro: "Classic Bavaria: palace gardens, beer halls, market food, art museums, surf-watching, and huge urban parks.",
         photo: "Munich is elegant without trying too hard: start at Marienplatz, then move between markets, parks, and royal spaces.",
@@ -1148,12 +1159,12 @@
         name: "Dresden",
         days: "2 days",
         accent: "#a84d35",
-        image: travelPhoto("dresden-frauenkirche-elbe"),
+        image: commons("Dresden Frauenkirche Neumarkt 2019.jpg"),
         gallery: [
-          travelThumb("dresden-frauenkirche"),
-          travelThumb("dresden-zwinger"),
-          travelThumb("dresden-elbe-sunset"),
-          travelThumb("dresden-neustadt")
+          commons("Dresden Frauenkirche Neumarkt 2019.jpg"),
+          commons("Dresden Zwinger Kronentor 2013.jpg"),
+          commons("Semperoper Dresden 2013.jpg"),
+          commons("Brühlsche Terrasse Dresden 2015.jpg")
         ],
         intro: "Baroque drama on the Elbe: Frauenkirche, Zwinger, Semperoper, porcelain history, Neustadt murals, and river sunsets.",
         photo: "Dresden feels theatrical. The old town is compact, luminous, and best at golden hour along the Elbe.",
