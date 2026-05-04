@@ -324,23 +324,18 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      padding: 26px 0 18px;
-      margin: 18px 0 18px;
+      padding: 14px 0;
+      margin: 16px 0 20px;
       background: rgba(247, 243, 235, 0.9);
       backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--line);
-      justify-content: center;
-      gap: 14px;
+      gap: 18px;
     }
 
     .city-nav button, .toolbar button {
       color: var(--ink);
       border-color: var(--line);
       background: rgba(255, 250, 241, 0.8);
-      min-height: 58px;
-      min-width: 118px;
-      justify-content: center;
-      font-size: 1rem;
     }
 
     .city-nav button.active, .toolbar button.active {
@@ -546,11 +541,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: #fffaf1;
-      background: var(--forest);
+      color: var(--forest);
+      background: #fff;
       border: 1px solid var(--forest);
       border-radius: var(--radius);
-      padding: 12px 16px;
+      padding: 12px 18px;
       margin-top: 12px;
       font-weight: 850;
       text-decoration: none;
@@ -558,6 +553,11 @@
       width: fit-content;
       max-width: 100%;
       transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .github-link span {
+      color: var(--forest);
+      display: inline;
     }
 
     .github-link:hover {
@@ -973,18 +973,19 @@
 
   <script>
     const commons = (fileName) => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(fileName)}`;
+    const touristPhoto = (tags, lock, width = 1500, height = 1000) => `https://loremflickr.com/${width}/${height}/${encodeURIComponent(tags)}?lock=${lock}`;
 
     const cities = [
       {
         name: "Berlin",
         days: "3 days",
         accent: "#bf6472",
-        image: commons("Brandenburger Tor abends.jpg"),
+        image: touristPhoto("berlin,brandenburg-gate,landmark", 101),
         gallery: [
-          commons("Brandenburger Tor abends.jpg"),
-          commons("Reichstag building Berlin view from west before sunset.jpg"),
-          commons("East Side Gallery Berlin 2014.jpg"),
-          commons("Berliner Dom bei Nacht.jpg")
+          touristPhoto("berlin,brandenburg-gate", 102, 900, 650),
+          touristPhoto("berlin,reichstag", 103, 900, 650),
+          touristPhoto("berlin,east-side-gallery", 104, 900, 650),
+          touristPhoto("berlin,cathedral", 105, 900, 650)
         ],
         intro: "Big history, late-night neighborhoods, world-class museums, street art, parks, and food from everywhere.",
         photo: "Start grand at Brandenburg Gate, then let the city become stranger, smarter, and more local with each neighborhood.",
@@ -1009,12 +1010,12 @@
         name: "Hamburg",
         days: "2 days",
         accent: "#276577",
-        image: commons("Speicherstadt in Hamburg 2015.jpg"),
+        image: touristPhoto("hamburg,speicherstadt,landmark", 201),
         gallery: [
-          commons("Speicherstadt in Hamburg 2015.jpg"),
-          commons("Elbphilharmonie Hamburg 2016.jpg"),
-          commons("Hamburg Landungsbrücken 2015.jpg"),
-          commons("Hamburg Speicherstadt Wasserschloss 2017.jpg")
+          touristPhoto("hamburg,speicherstadt", 202, 900, 650),
+          touristPhoto("hamburg,elbphilharmonie", 203, 900, 650),
+          touristPhoto("hamburg,harbor", 204, 900, 650),
+          touristPhoto("hamburg,canal", 205, 900, 650)
         ],
         intro: "Harbor drama, red-brick warehouses, canals, music, fish-market energy, and some of Germany's best waterfront walks.",
         photo: "Hamburg is best when you stay near the water: Speicherstadt by day, Elbphilharmonie glow by evening.",
@@ -1039,12 +1040,12 @@
         name: "Bremen",
         days: "1 day",
         accent: "#a84d35",
-        image: commons("Bremen Marktplatz Panorama.jpg"),
+        image: touristPhoto("bremen,market-square,landmark", 301),
         gallery: [
-          commons("Bremen Marktplatz Panorama.jpg"),
-          commons("Schnoorviertel Bremen 2012.jpg"),
-          commons("Bremen Roland 2017.jpg"),
-          commons("Böttcherstraße Bremen 2012.jpg")
+          touristPhoto("bremen,market-square", 302, 900, 650),
+          touristPhoto("bremen,schnoor", 303, 900, 650),
+          touristPhoto("bremen,town-hall", 304, 900, 650),
+          touristPhoto("bremen,old-town", 305, 900, 650)
         ],
         intro: "Compact, charming, very walkable: fairy-tale market square, Schnoor lanes, brick expressionism, and river evenings.",
         photo: "Bremen is a one-day jewel. Keep it slow, walk the lanes, and let the old town details do the work.",
@@ -1069,12 +1070,12 @@
         name: "Frankfurt",
         days: "1 to 2 days",
         accent: "#d79b3e",
-        image: commons("Frankfurt Skyline at night.jpg"),
+        image: touristPhoto("frankfurt,skyline,landmark", 401),
         gallery: [
-          commons("Frankfurt Skyline at night.jpg"),
-          commons("Frankfurt Am Main-Römerberg-Ansicht vom Domturm-20110525.jpg"),
-          commons("Main Tower Frankfurt 2010.jpg"),
-          commons("Eiserner Steg Frankfurt 2014.jpg")
+          touristPhoto("frankfurt,skyline", 402, 900, 650),
+          touristPhoto("frankfurt,romerberg", 403, 900, 650),
+          touristPhoto("frankfurt,main-tower", 404, 900, 650),
+          touristPhoto("frankfurt,river", 405, 900, 650)
         ],
         intro: "Germany's skyline city with a reconstructed old town, serious museums, apple-wine taverns, and riverbank energy.",
         photo: "Frankfurt works best when you contrast glass towers with Romerberg, the Main river, and Sachsenhausen taverns.",
@@ -1099,12 +1100,12 @@
         name: "Cologne",
         days: "1 day",
         accent: "#24483a",
-        image: commons("Kölner Dom und Hohenzollernbrücke Abend.jpg"),
+        image: touristPhoto("cologne,cathedral,landmark", 501),
         gallery: [
-          commons("Kölner Dom und Hohenzollernbrücke Abend.jpg"),
-          commons("Cologne Cathedral from the east.jpg"),
-          commons("Hohenzollernbrücke Köln 2014.jpg"),
-          commons("Groß St. Martin Köln 2012.jpg")
+          touristPhoto("cologne,cathedral", 502, 900, 650),
+          touristPhoto("cologne,rhine", 503, 900, 650),
+          touristPhoto("cologne,bridge", 504, 900, 650),
+          touristPhoto("cologne,old-town", 505, 900, 650)
         ],
         intro: "A Rhine city with the mighty Cologne Cathedral, old-town brewery culture, river bridges, museums, and lively local neighborhoods.",
         photo: "Cologne is your Rhine city hit: the cathedral dominates the skyline, the old town stays social, and the river gives easy sunset walks.",
@@ -1129,12 +1130,12 @@
         name: "Munich",
         days: "3 days",
         accent: "#276577",
-        image: commons("Marienplatz München Neues Rathaus.jpg"),
+        image: touristPhoto("munich,marienplatz,landmark", 601),
         gallery: [
-          commons("Marienplatz München Neues Rathaus.jpg"),
-          commons("Schloss Nymphenburg München 2013.jpg"),
-          commons("Englischer Garten München Monopteros.jpg"),
-          commons("Munich Olympiapark 2014.jpg")
+          touristPhoto("munich,marienplatz", 602, 900, 650),
+          touristPhoto("munich,nymphenburg-palace", 603, 900, 650),
+          touristPhoto("munich,english-garden", 604, 900, 650),
+          touristPhoto("munich,olympiapark", 605, 900, 650)
         ],
         intro: "Classic Bavaria: palace gardens, beer halls, market food, art museums, surf-watching, and huge urban parks.",
         photo: "Munich is elegant without trying too hard: start at Marienplatz, then move between markets, parks, and royal spaces.",
@@ -1159,12 +1160,12 @@
         name: "Dresden",
         days: "2 days",
         accent: "#a84d35",
-        image: commons("Dresden Frauenkirche Neumarkt 2019.jpg"),
+        image: touristPhoto("dresden,frauenkirche,landmark", 701),
         gallery: [
-          commons("Dresden Frauenkirche Neumarkt 2019.jpg"),
-          commons("Dresden Zwinger Kronentor 2013.jpg"),
-          commons("Semperoper Dresden 2013.jpg"),
-          commons("Brühlsche Terrasse Dresden 2015.jpg")
+          touristPhoto("dresden,frauenkirche", 702, 900, 650),
+          touristPhoto("dresden,zwinger", 703, 900, 650),
+          touristPhoto("dresden,semperoper", 704, 900, 650),
+          touristPhoto("dresden,elbe", 705, 900, 650)
         ],
         intro: "Baroque drama on the Elbe: Frauenkirche, Zwinger, Semperoper, porcelain history, Neustadt murals, and river sunsets.",
         photo: "Dresden feels theatrical. The old town is compact, luminous, and best at golden hour along the Elbe.",
