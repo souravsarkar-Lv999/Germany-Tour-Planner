@@ -8,6 +8,7 @@ import socketserver
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 import webbrowser
 from pathlib import Path
@@ -70,11 +71,13 @@ class TravelPlannerHandler(http.server.SimpleHTTPRequestHandler):
         return
 
     def do_GET(self) -> None:
-        if self.path == "/api/info":
+        route = urllib.parse.urlparse(self.path).path
+
+        if route == "/api/info":
             json_response(self, 200, {"localUrl": LOCAL_URL, "phoneUrl": PHONE_URL})
             return
 
-        if self.path == "/qr.svg":
+        if route == "/qr.svg":
             qr = qrcode.QRCode(border=2, box_size=8)
             qr.add_data(PHONE_URL or LOCAL_URL)
             qr.make(fit=True)
