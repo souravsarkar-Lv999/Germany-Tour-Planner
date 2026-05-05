@@ -27,4 +27,3 @@ You can paste online image URLs, or put your own image files in `assets` and use
 The app automatically crops and resizes images to fit the layout.
 =======
 Plan smarter, explore deeper, and travel better—all in one place.
->>>>>>> c293a40cb0905c22cbf5e91bd08975a1a12ec3ab
